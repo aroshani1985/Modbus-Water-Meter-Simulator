@@ -224,7 +224,7 @@ namespace ModbusSlvSim
         #region Methods - Modbus
         void Init_Modbus()
         {
-            _mbc = new mbcore();
+            _mbc = new mbcore(sp1, txtr_main);
         }
         #endregion
 

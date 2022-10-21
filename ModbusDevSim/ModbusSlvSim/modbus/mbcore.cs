@@ -1,8 +1,11 @@
-﻿using System;
+﻿using ModbusSlvSim.spx;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ModbusSlvSim.modbus
 {
@@ -30,20 +33,32 @@ namespace ModbusSlvSim.modbus
         #region Fields
         byte _mb_address;
         byte[] _mb_rec_pkt;
+        byte[] _mb_rep_pkt;
         byte _err_code;
         byte _fcn_code;
         UInt16 _crc;
+        byte _crc_h;
+        byte _crc_l;
+        sp _sp;
+        RichTextBox _rtb;
+        sputil _sput;
         #endregion
 
         #region Constructors
-        public mbcore()
+        public mbcore(sp spx, RichTextBox rtb)
         {
             _mb_address = DEFAULT_SLAVE_ADDRESS;
+            _rtb = rtb;
+            _sp = spx;
+            _sput = new sputil();
         }
 
-        public mbcore(byte SlaveAddress)
+        public mbcore(byte SlaveAddress, sp spx, RichTextBox rtb)
         {
             _mb_address = SlaveAddress;
+            _rtb = rtb;
+            _sp = spx;
+            _sput = new sputil();
         }
         #endregion
 
@@ -62,7 +77,7 @@ namespace ModbusSlvSim.modbus
                 _err_code = 2;
                 return _err_code;
             }
-            if(!get_modbus_crc(_mb_rec_pkt))
+            if(!check_modbus_crc(_mb_rec_pkt))
             {
                 _err_code = 3;
                 return _err_code;
@@ -73,10 +88,11 @@ namespace ModbusSlvSim.modbus
                 _err_code = 4;
                 return _err_code;
             }
+            error_invalid_add_reply();
             return _err_code;
         }
 
-        bool get_modbus_crc(byte[] buf)
+        bool check_modbus_crc(byte[] buf)
         {
             _crc = 0xFFFF;
             int len = buf.Length - 2;
@@ -100,6 +116,32 @@ namespace ModbusSlvSim.modbus
                 return true;
             else
                 return false;
+        }
+
+        void make_modbus_crc(ref byte[] buf)
+        {
+            _crc = 0xFFFF;
+            int len = buf.Length - 2;
+            for (int pos = 0; pos < len; pos++)
+            {
+                _crc ^= (UInt16)buf[pos];          // XOR byte into least sig. byte of crc
+
+                for (int i = 8; i != 0; i--)
+                {    // Loop over each bit
+                    if ((_crc & 0x0001) != 0)
+                    {      // If the LSB is set
+                        _crc >>= 1;                    // Shift right and XOR 0xA001
+                        _crc ^= 0xA001;
+                    }
+                    else                            // Else LSB is not set
+                        _crc >>= 1;                    // Just shift right
+                }
+            }
+            // Note, this number has low and high bytes swapped, so use it accordingly (or swap bytes)
+            _crc_h = (byte)((_crc >> 8) & 0xFF);
+            _crc_l = (byte)(_crc & 0xFF); // comes fiest 
+            buf[buf.Length - 2] = _crc_l;
+            buf[buf.Length - 1] = _crc_h;
         }
 
         bool process_function_code(byte FunctionCode)
@@ -137,6 +179,25 @@ namespace ModbusSlvSim.modbus
                     break;
             }
             return is_fcn_valid;
+        }
+
+        void error_invalid_add_reply()
+        {
+            _mb_rep_pkt = new byte[5];
+            _mb_rep_pkt[0] = _mb_address;
+            _mb_rep_pkt[1] = (byte)(128 + _fcn_code);
+            _mb_rep_pkt[2] = 0x02; //invalid address code 
+            make_modbus_crc(ref _mb_rep_pkt);
+            send_packet();
+        }
+
+        void send_packet()
+        {
+            if (_sp.Is_Port_Open)
+            {
+                _sp.SendArray(_mb_rep_pkt, _mb_rep_pkt.Length);
+                _sput.SetRichText(_rtb, "Slave Reply: " + BitConverter.ToString(_mb_rep_pkt), Color.Aqua);
+            }
         }
         #endregion
 

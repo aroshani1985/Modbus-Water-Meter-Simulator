@@ -14,6 +14,6 @@ Modbus Water Meter Device Simulator
 # Water Meter Features
   - Simple software water meter 
   - Support Voluem, Flowrate, Temprature 
-  - Support M-Bus master requests 
+  - Support Modbus master requests 
 
  

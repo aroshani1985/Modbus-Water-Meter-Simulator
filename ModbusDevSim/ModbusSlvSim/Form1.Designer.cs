@@ -67,15 +67,6 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.cbx_binary_err_code = new System.Windows.Forms.ComboBox();
             this.cbx_status = new System.Windows.Forms.ComboBox();
-            this.chk_err_code = new System.Windows.Forms.CheckBox();
-            this.chk_ontime = new System.Windows.Forms.CheckBox();
-            this.chk_flowrate = new System.Windows.Forms.CheckBox();
-            this.chk_serial_no = new System.Windows.Forms.CheckBox();
-            this.chk_temp = new System.Windows.Forms.CheckBox();
-            this.chk_rev_volume = new System.Windows.Forms.CheckBox();
-            this.chk_vol = new System.Windows.Forms.CheckBox();
-            this.chk_dt = new System.Windows.Forms.CheckBox();
-            this.label17 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.tim_wm = new System.Windows.Forms.Timer(this.components);
@@ -491,15 +482,6 @@
             // 
             this.groupBox3.Controls.Add(this.cbx_binary_err_code);
             this.groupBox3.Controls.Add(this.cbx_status);
-            this.groupBox3.Controls.Add(this.chk_err_code);
-            this.groupBox3.Controls.Add(this.chk_ontime);
-            this.groupBox3.Controls.Add(this.chk_flowrate);
-            this.groupBox3.Controls.Add(this.chk_serial_no);
-            this.groupBox3.Controls.Add(this.chk_temp);
-            this.groupBox3.Controls.Add(this.chk_rev_volume);
-            this.groupBox3.Controls.Add(this.chk_vol);
-            this.groupBox3.Controls.Add(this.chk_dt);
-            this.groupBox3.Controls.Add(this.label17);
             this.groupBox3.Controls.Add(this.label16);
             this.groupBox3.Controls.Add(this.label15);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -546,99 +528,6 @@
             this.cbx_status.Name = "cbx_status";
             this.cbx_status.Size = new System.Drawing.Size(187, 29);
             this.cbx_status.TabIndex = 10;
-            // 
-            // chk_err_code
-            // 
-            this.chk_err_code.AutoSize = true;
-            this.chk_err_code.Location = new System.Drawing.Point(170, 230);
-            this.chk_err_code.Name = "chk_err_code";
-            this.chk_err_code.Size = new System.Drawing.Size(107, 25);
-            this.chk_err_code.TabIndex = 7;
-            this.chk_err_code.Text = "Error code";
-            this.chk_err_code.UseVisualStyleBackColor = true;
-            // 
-            // chk_ontime
-            // 
-            this.chk_ontime.AutoSize = true;
-            this.chk_ontime.Location = new System.Drawing.Point(170, 207);
-            this.chk_ontime.Name = "chk_ontime";
-            this.chk_ontime.Size = new System.Drawing.Size(96, 25);
-            this.chk_ontime.TabIndex = 8;
-            this.chk_ontime.Text = "ON Time";
-            this.chk_ontime.UseVisualStyleBackColor = true;
-            // 
-            // chk_flowrate
-            // 
-            this.chk_flowrate.AutoSize = true;
-            this.chk_flowrate.Location = new System.Drawing.Point(24, 230);
-            this.chk_flowrate.Name = "chk_flowrate";
-            this.chk_flowrate.Size = new System.Drawing.Size(95, 25);
-            this.chk_flowrate.TabIndex = 9;
-            this.chk_flowrate.Text = "Flowrate";
-            this.chk_flowrate.UseVisualStyleBackColor = true;
-            // 
-            // chk_serial_no
-            // 
-            this.chk_serial_no.AutoSize = true;
-            this.chk_serial_no.Location = new System.Drawing.Point(170, 181);
-            this.chk_serial_no.Name = "chk_serial_no";
-            this.chk_serial_no.Size = new System.Drawing.Size(99, 25);
-            this.chk_serial_no.TabIndex = 6;
-            this.chk_serial_no.Text = "Serial No";
-            this.chk_serial_no.UseVisualStyleBackColor = true;
-            // 
-            // chk_temp
-            // 
-            this.chk_temp.AutoSize = true;
-            this.chk_temp.Location = new System.Drawing.Point(170, 155);
-            this.chk_temp.Name = "chk_temp";
-            this.chk_temp.Size = new System.Drawing.Size(117, 25);
-            this.chk_temp.TabIndex = 5;
-            this.chk_temp.Text = "Temprature";
-            this.chk_temp.UseVisualStyleBackColor = true;
-            // 
-            // chk_rev_volume
-            // 
-            this.chk_rev_volume.AutoSize = true;
-            this.chk_rev_volume.Location = new System.Drawing.Point(24, 207);
-            this.chk_rev_volume.Name = "chk_rev_volume";
-            this.chk_rev_volume.Size = new System.Drawing.Size(120, 25);
-            this.chk_rev_volume.TabIndex = 5;
-            this.chk_rev_volume.Text = "Rev Volume";
-            this.chk_rev_volume.UseVisualStyleBackColor = true;
-            // 
-            // chk_vol
-            // 
-            this.chk_vol.AutoSize = true;
-            this.chk_vol.Checked = true;
-            this.chk_vol.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chk_vol.Location = new System.Drawing.Point(24, 181);
-            this.chk_vol.Name = "chk_vol";
-            this.chk_vol.Size = new System.Drawing.Size(88, 25);
-            this.chk_vol.TabIndex = 5;
-            this.chk_vol.Text = "Volume";
-            this.chk_vol.UseVisualStyleBackColor = true;
-            // 
-            // chk_dt
-            // 
-            this.chk_dt.AutoSize = true;
-            this.chk_dt.Checked = true;
-            this.chk_dt.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chk_dt.Location = new System.Drawing.Point(24, 155);
-            this.chk_dt.Name = "chk_dt";
-            this.chk_dt.Size = new System.Drawing.Size(112, 25);
-            this.chk_dt.TabIndex = 4;
-            this.chk_dt.Text = "Time point";
-            this.chk_dt.UseVisualStyleBackColor = true;
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(8, 115);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(110, 21);
-            this.label17.TabIndex = 3;
-            this.label17.Text = "Data records:";
             // 
             // label16
             // 
@@ -734,15 +623,6 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.ComboBox cbx_binary_err_code;
         private System.Windows.Forms.ComboBox cbx_status;
-        private System.Windows.Forms.CheckBox chk_err_code;
-        private System.Windows.Forms.CheckBox chk_ontime;
-        private System.Windows.Forms.CheckBox chk_flowrate;
-        private System.Windows.Forms.CheckBox chk_serial_no;
-        private System.Windows.Forms.CheckBox chk_temp;
-        private System.Windows.Forms.CheckBox chk_rev_volume;
-        private System.Windows.Forms.CheckBox chk_vol;
-        private System.Windows.Forms.CheckBox chk_dt;
-        private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Timer tim_wm;
