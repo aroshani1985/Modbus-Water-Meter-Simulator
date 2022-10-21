@@ -63,7 +63,7 @@ namespace ModbusSlvSim.modbus
         }
         #endregion
 
-        #region Methods
+        #region Methods - Process Request 
         public byte process_packet(byte[] Packet)
         {
             _err_code = 0;
@@ -170,8 +170,7 @@ namespace ModbusSlvSim.modbus
                     break;
 
                 case (byte)ModbusFcnCode.ReadInputRegisters:
-                    //reply_Input_Register();
-                    reply_Input_Register_float(10.25f);
+                    reply_input_register();
                     break;
 
                 case (byte)ModbusFcnCode.WriteSingleCoil:
@@ -198,10 +197,17 @@ namespace ModbusSlvSim.modbus
             _add_reg = _mb_rec_pkt[2];
             _add_reg <<= 8;
             _add_reg |= _mb_rec_pkt[3];
+            _add_reg++;
+
+            if (_add_reg > 6)
+                return false;
 
             _len_data = _mb_rec_pkt[4];
             _len_data <<= 8;
             _len_data |= _mb_rec_pkt[5];
+
+            if (_len_data > 6)
+                return false;
 
             return true;
         }
@@ -214,19 +220,36 @@ namespace ModbusSlvSim.modbus
             make_modbus_crc(ref _mb_rep_pkt);
             send_packet();
         }
-
-        void reply_Input_Register()
+        void reply_input_register()
         {
-            _mb_rep_pkt = new byte[5 + 4];
+            int data_len = _len_data * 2;
+            _mb_rep_pkt = new byte[5 + data_len];
             _mb_rep_pkt[0] = _mb_address;
             _mb_rep_pkt[1] = _fcn_code;
-            _mb_rep_pkt[2] = 0x04; //Data len
+            _mb_rep_pkt[2] = (byte)data_len; //Data len
+            switch (_add_reg)
+            {
+                case 1:
+                    fill_float(1.687f, 3, true);
+                    if (_len_data >=4)
+                        fill_float(15.687f, 7, true);
+                    if(_len_data>=6)
+                        fill_float(124.987f, 11, true);
+                    break;
 
-            _mb_rep_pkt[3] = 0x01;
-            _mb_rep_pkt[4] = 0x02;
-            _mb_rep_pkt[5] = 0x03;
-            _mb_rep_pkt[6] = 0x04;
+                case 2:
+                    fill_float(15.687f, 3, true);
+                    if(_len_data >=4)
+                        fill_float(124.987f, 7, true);
+                    break;
 
+                case 3:
+                    fill_float(124.987f, 3, true);
+                    break;
+                default:
+                    break;
+
+            }
             make_modbus_crc(ref _mb_rep_pkt);
             send_packet();
         }
@@ -266,6 +289,44 @@ namespace ModbusSlvSim.modbus
             }
         }
         #endregion
+
+        #region Prepare reply
+        void fill_u16(byte value, int start_idx)
+        {
+            _mb_rep_pkt[start_idx] = value;
+        }
+        void fill_u16(UInt16 value, int start_idx)
+        {
+            _mb_rep_pkt[start_idx] = (byte)(value >> 8 & 0xFF);
+            _mb_rep_pkt[start_idx + 1] = (byte)(value >> 0 & 0xFF);
+        }
+        void fill_u32(UInt32 value, int start_idx)
+        {
+            _mb_rep_pkt[start_idx] = (byte)(value >> 8 & 0xFF);
+            _mb_rep_pkt[start_idx+1] = (byte)(value >> 0 & 0xFF);
+            _mb_rep_pkt[start_idx+2] = (byte)(value >> 24 & 0xFF);
+            _mb_rep_pkt[start_idx+3] = (byte)(value >> 16 & 0xFF); ;
+        }
+        void fill_float(float value, int start_idx, bool is_le)
+        {
+            byte[] single_percision_float = BitConverter.GetBytes(value);
+            if(is_le)
+            {
+                _mb_rep_pkt[start_idx] = single_percision_float[1];
+                _mb_rep_pkt[start_idx + 1] = single_percision_float[0];
+                _mb_rep_pkt[start_idx + 2] = single_percision_float[3];
+                _mb_rep_pkt[start_idx + 3] = single_percision_float[2];
+            }
+            else
+            {
+                _mb_rep_pkt[start_idx] = single_percision_float[3];
+                _mb_rep_pkt[start_idx + 1] = single_percision_float[2];
+                _mb_rep_pkt[start_idx + 2] = single_percision_float[1];
+                _mb_rep_pkt[start_idx + 3] = single_percision_float[0];
+            }
+        }
+        #endregion
+
 
         #region Properties
         public byte ErrorCode
