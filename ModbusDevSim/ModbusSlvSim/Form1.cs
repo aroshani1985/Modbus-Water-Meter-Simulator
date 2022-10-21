@@ -1,4 +1,5 @@
-﻿using ModbusSlvSim.spx;
+﻿using ModbusSlvSim.modbus;
+using ModbusSlvSim.spx;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,6 +25,10 @@ namespace ModbusSlvSim
         double volume = 0; //M3 
         double flow_rate = 3600; //M3 per hour
         double temprature = 25.0; //M3 per hour
+        #endregion
+
+        #region Fields - Modbus
+        mbcore _mbc; 
         #endregion
 
         #region Init and Constructors
@@ -69,7 +74,7 @@ namespace ModbusSlvSim
                 if (sp1.Is_Port_Open)
                 {
                     is_sp_open = true;
-                    //Init_Mbus();
+                    Init_Modbus();
                 }
             }
         }
@@ -94,6 +99,10 @@ namespace ModbusSlvSim
         private void Sp1_onRec(object sender, spRecEv e)
         {
             su1.SetRichText(txtr_main, "Master Request: " + BitConverter.ToString(e.data_byte), Color.Pink);
+            if(_mbc.process_packet(e.data_byte) != 0)
+            {
+                su1.SetRichText(txtr_main, "Invalid Packet, Err Code: " + _mbc.ErrorCode.ToString(), Color.Red);
+            }
         }
         private void Sp1_onEv(object sender, spEvents e)
         {
@@ -209,6 +218,13 @@ namespace ModbusSlvSim
             lbl_volume.Text = String.Format("{0:0.00}", volume);
             lbl_temp.Text = temprature.ToString();
             lbl_flowrate.Text = flow_rate.ToString();
+        }
+        #endregion
+
+        #region Methods - Modbus
+        void Init_Modbus()
+        {
+            _mbc = new mbcore();
         }
         #endregion
 
