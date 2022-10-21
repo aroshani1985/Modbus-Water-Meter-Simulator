@@ -20,7 +20,10 @@ namespace ModbusSlvSim
         int sp_idx = 0;
         #endregion
 
-        #region 
+        #region Fields - Water meter
+        double volume = 0; //M3 
+        double flow_rate = 3600; //M3 per hour
+        double temprature = 25.0; //M3 per hour
         #endregion
 
         #region Init and Constructors
@@ -158,8 +161,56 @@ namespace ModbusSlvSim
             // scroll it automatically
             txtr_main.ScrollToCaret();
         }
+
         #endregion
 
+        #region Methods - Timer
+        private void btn_start_wm_Click(object sender, EventArgs e)
+        {
+            tim_wm.Enabled = true;
+            tim_wm.Start();
+        }
+
+        private void btn_stop_wm_Click(object sender, EventArgs e)
+        {
+            tim_wm.Stop();
+            tim_wm.Enabled = false;
+        }
+        private void tim_wm_Tick(object sender, EventArgs e)
+        {
+            update_wm_param();
+        }
+        #endregion
+
+        #region Methods - Water Meter
+        void update_wm_param()
+        {
+            volume += flow_rate / 3600;
+
+            lbl_volume.Text = String.Format("{0:0.00}", volume);
+            lbl_temp.Text = temprature.ToString();
+            lbl_flowrate.Text = flow_rate.ToString();
+        }
+        void update_wm_data_record_params()
+        {
+            //_wmparam.Temprature = (float)temprature;
+            //_wmparam.Volume = (UInt32)volume;
+            //_wmparam.ErrorCode = (UInt32)cbx_binary_err_code.SelectedIndex;
+            //_wmparam.Flowrate = (float)flow_rate;
+            //_wmparam.OnTime = 1000;
+            //_wmparam.Records = _Active_records;
+        }
+        private void btn_update_wm_settings_Click(object sender, EventArgs e)
+        {
+            volume = (double)nud_volume.Value;
+            flow_rate = (double)nud_flowrate.Value;
+            temprature = (double)nud_temp.Value;
+
+            lbl_volume.Text = String.Format("{0:0.00}", volume);
+            lbl_temp.Text = temprature.ToString();
+            lbl_flowrate.Text = flow_rate.ToString();
+        }
+        #endregion
 
     }
 }

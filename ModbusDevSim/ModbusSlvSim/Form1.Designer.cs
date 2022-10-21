@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.tlb_main = new System.Windows.Forms.TableLayoutPanel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -77,6 +78,7 @@
             this.label17 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
+            this.tim_wm = new System.Windows.Forms.Timer(this.components);
             this.tlb_main.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.tlb_sp.SuspendLayout();
@@ -344,6 +346,7 @@
             this.btn_stop_wm.TabIndex = 0;
             this.btn_stop_wm.Text = "Stop";
             this.btn_stop_wm.UseVisualStyleBackColor = false;
+            this.btn_stop_wm.Click += new System.EventHandler(this.btn_stop_wm_Click);
             // 
             // btn_start_wm
             // 
@@ -354,6 +357,7 @@
             this.btn_start_wm.TabIndex = 0;
             this.btn_start_wm.Text = "Start";
             this.btn_start_wm.UseVisualStyleBackColor = false;
+            this.btn_start_wm.Click += new System.EventHandler(this.btn_start_wm_Click);
             // 
             // groupBox2
             // 
@@ -383,6 +387,7 @@
             this.btn_update_wm_settings.TabIndex = 4;
             this.btn_update_wm_settings.Text = "Update Setting";
             this.btn_update_wm_settings.UseVisualStyleBackColor = true;
+            this.btn_update_wm_settings.Click += new System.EventHandler(this.btn_update_wm_settings_Click);
             // 
             // nud_temp
             // 
@@ -653,6 +658,11 @@
             this.label15.TabIndex = 2;
             this.label15.Text = "Status:";
             // 
+            // tim_wm
+            // 
+            this.tim_wm.Interval = 1000;
+            this.tim_wm.Tick += new System.EventHandler(this.tim_wm_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -735,5 +745,6 @@
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Timer tim_wm;
     }
 }
