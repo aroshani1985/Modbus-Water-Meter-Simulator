@@ -12,10 +12,23 @@ namespace ModbusSlvSim
 {
     public partial class Form1 : Form
     {
+        #region 
+
+        #endregion
+
+        #region Init and Constructors
         public Form1()
         {
             InitializeComponent();
         }
+        #endregion
 
+        #region 
+
+        #endregion
+
+        #region 
+
+        #endregion
     }
 }
