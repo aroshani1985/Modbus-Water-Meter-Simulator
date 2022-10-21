@@ -170,7 +170,8 @@ namespace ModbusSlvSim.modbus
                     break;
 
                 case (byte)ModbusFcnCode.ReadInputRegisters:
-                    reply_Input_Register();
+                    //reply_Input_Register();
+                    reply_Input_Register_float(10.25f);
                     break;
 
                 case (byte)ModbusFcnCode.WriteSingleCoil:
@@ -225,6 +226,33 @@ namespace ModbusSlvSim.modbus
             _mb_rep_pkt[4] = 0x02;
             _mb_rep_pkt[5] = 0x03;
             _mb_rep_pkt[6] = 0x04;
+
+            make_modbus_crc(ref _mb_rep_pkt);
+            send_packet();
+        }
+        void reply_Input_Register_float(float value)
+        {
+            _mb_rep_pkt = new byte[5 + 4];
+            _mb_rep_pkt[0] = _mb_address;
+            _mb_rep_pkt[1] = _fcn_code;
+            _mb_rep_pkt[2] = 0x04; //Data len
+
+            byte[] single_percision_float = BitConverter.GetBytes(value);
+            //little endian  LSRF modscan
+            /*
+            _mb_rep_pkt[3] = single_percision_float[1];
+            _mb_rep_pkt[4] = single_percision_float[0];
+            _mb_rep_pkt[5] = single_percision_float[3];
+            _mb_rep_pkt[6] = single_percision_float[2];
+            */
+
+            //big endian   MSRF modscan
+            
+            _mb_rep_pkt[3] = single_percision_float[3];
+            _mb_rep_pkt[4] = single_percision_float[2];
+            _mb_rep_pkt[5] = single_percision_float[1];
+            _mb_rep_pkt[6] = single_percision_float[0];
+            
 
             make_modbus_crc(ref _mb_rep_pkt);
             send_packet();
