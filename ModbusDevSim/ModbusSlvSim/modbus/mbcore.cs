@@ -13,7 +13,6 @@ namespace ModbusSlvSim.modbus
     {
         #region CONSTS
         const byte DEFAULT_SLAVE_ADDRESS = 1;
-
         #endregion
 
         #region Type definitions
@@ -36,6 +35,8 @@ namespace ModbusSlvSim.modbus
         byte[] _mb_rep_pkt;
         byte _err_code;
         byte _fcn_code;
+        UInt16 _add_reg;
+        UInt16 _len_data;
         UInt16 _crc;
         byte _crc_h;
         byte _crc_l;
@@ -82,13 +83,22 @@ namespace ModbusSlvSim.modbus
                 _err_code = 3;
                 return _err_code;
             }
-            
-            if(!process_function_code(_mb_rec_pkt[1]))
+            if (!process_packet_parameters())
             {
                 _err_code = 4;
                 return _err_code;
             }
-            error_invalid_add_reply();
+            if (process_function_code(_mb_rec_pkt[1]))
+            {
+                
+                return _err_code;
+            }
+            else
+            {
+                _err_code = 5;
+                error_invalid_add_reply();
+            }
+           
             return _err_code;
         }
 
@@ -160,6 +170,7 @@ namespace ModbusSlvSim.modbus
                     break;
 
                 case (byte)ModbusFcnCode.ReadInputRegisters:
+                    reply_Input_Register();
                     break;
 
                 case (byte)ModbusFcnCode.WriteSingleCoil:
@@ -181,6 +192,18 @@ namespace ModbusSlvSim.modbus
             return is_fcn_valid;
         }
 
+        bool process_packet_parameters()
+        {
+            _add_reg = _mb_rec_pkt[2];
+            _add_reg <<= 8;
+            _add_reg |= _mb_rec_pkt[3];
+
+            _len_data = _mb_rec_pkt[4];
+            _len_data <<= 8;
+            _len_data |= _mb_rec_pkt[5];
+
+            return true;
+        }
         void error_invalid_add_reply()
         {
             _mb_rep_pkt = new byte[5];
@@ -191,6 +214,21 @@ namespace ModbusSlvSim.modbus
             send_packet();
         }
 
+        void reply_Input_Register()
+        {
+            _mb_rep_pkt = new byte[5 + 4];
+            _mb_rep_pkt[0] = _mb_address;
+            _mb_rep_pkt[1] = _fcn_code;
+            _mb_rep_pkt[2] = 0x04; //Data len
+
+            _mb_rep_pkt[3] = 0x01;
+            _mb_rep_pkt[4] = 0x02;
+            _mb_rep_pkt[5] = 0x03;
+            _mb_rep_pkt[6] = 0x04;
+
+            make_modbus_crc(ref _mb_rep_pkt);
+            send_packet();
+        }
         void send_packet()
         {
             if (_sp.Is_Port_Open)
