@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static ModbusSlvSim.modbus.mbcore;
 
 namespace ModbusSlvSim
 {
@@ -28,7 +29,8 @@ namespace ModbusSlvSim
         #endregion
 
         #region Fields - Modbus
-        mbcore _mbc; 
+        mbcore _mbc;
+        WMparam _wmparam;
         #endregion
 
         #region Init and Constructors
@@ -52,6 +54,8 @@ namespace ModbusSlvSim
                 is_sp_open = false;
             }
         }
+        #endregion
+
         #region Methods - Serial Port
         public void Init_SP()
         {
@@ -99,7 +103,9 @@ namespace ModbusSlvSim
         private void Sp1_onRec(object sender, spRecEv e)
         {
             su1.SetRichText(txtr_main, "Master Request: " + BitConverter.ToString(e.data_byte), Color.Pink);
-            if(_mbc.process_packet(e.data_byte) != 0)
+            update_wm_data_record_params();
+            _mbc.WaterMeterParams = _wmparam;
+            if (_mbc.process_packet(e.data_byte) != 0)
             {
                 su1.SetRichText(txtr_main, "Invalid Packet, Err Code: " + _mbc.ErrorCode.ToString(), Color.Red);
             }
@@ -127,8 +133,6 @@ namespace ModbusSlvSim
             }
             su1.SetRichText(txtr_main, e.ev_msg, c);
         }
-
-        #endregion
 
         #endregion
 
@@ -202,12 +206,9 @@ namespace ModbusSlvSim
         }
         void update_wm_data_record_params()
         {
-            //_wmparam.Temprature = (float)temprature;
-            //_wmparam.Volume = (UInt32)volume;
-            //_wmparam.ErrorCode = (UInt32)cbx_binary_err_code.SelectedIndex;
-            //_wmparam.Flowrate = (float)flow_rate;
-            //_wmparam.OnTime = 1000;
-            //_wmparam.Records = _Active_records;
+            _wmparam.Temprature = (float)temprature;
+            _wmparam.Volume = (float)volume;
+            _wmparam.Flowrate = (float)flow_rate;
         }
         private void btn_update_wm_settings_Click(object sender, EventArgs e)
         {

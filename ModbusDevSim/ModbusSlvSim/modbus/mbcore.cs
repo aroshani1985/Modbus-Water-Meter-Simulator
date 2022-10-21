@@ -43,6 +43,14 @@ namespace ModbusSlvSim.modbus
         sp _sp;
         RichTextBox _rtb;
         sputil _sput;
+
+        public struct WMparam
+        {
+            public float Volume;
+            public float Flowrate;
+            public float Temprature;
+        }
+        WMparam _wmparam;
         #endregion
 
         #region Constructors
@@ -230,21 +238,21 @@ namespace ModbusSlvSim.modbus
             switch (_add_reg)
             {
                 case 1:
-                    fill_float(1.687f, 3, true);
+                    fill_float(_wmparam.Volume, 3, true);
                     if (_len_data >=4)
-                        fill_float(15.687f, 7, true);
+                        fill_float(_wmparam.Flowrate, 7, true);
                     if(_len_data>=6)
-                        fill_float(124.987f, 11, true);
+                        fill_float(_wmparam.Temprature, 11, true);
                     break;
 
                 case 2:
-                    fill_float(15.687f, 3, true);
+                    fill_float(_wmparam.Flowrate, 3, true);
                     if(_len_data >=4)
-                        fill_float(124.987f, 7, true);
+                        fill_float(_wmparam.Temprature, 7, true);
                     break;
 
                 case 3:
-                    fill_float(124.987f, 3, true);
+                    fill_float(_wmparam.Temprature, 3, true);
                     break;
                 default:
                     break;
@@ -334,6 +342,14 @@ namespace ModbusSlvSim.modbus
             get
             {
                 return _err_code;
+            }
+        }
+
+        public WMparam WaterMeterParams
+        {
+            set
+            {
+                _wmparam = value;
             }
         }
         #endregion
