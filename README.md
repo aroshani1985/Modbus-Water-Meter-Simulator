@@ -15,7 +15,7 @@ Modbus Water Meter Device Simulator
 
 # Water Meter Features
   - Simple software water meter 
-  - Support Voluem, Flowrate, Temprature of water
+  - Support Volume, Flowrate, Temprature of water
   - Support Modbus master request read input registers
   - Support Modbus exceptions
 
@@ -24,5 +24,7 @@ Modbus Water Meter Device Simulator
   - Need .Net5 desktop runtime to execute on wondows
   - Serial port configuration : Baud 9600, Data 8, Parity Even, Stop 1
   - Click start button to start water meter simulator
+  - You can use ModScan32 software as Modbus master 
+  - To display flouting point numbers enable ModScan32 floating point button (LSRF)
 
  
